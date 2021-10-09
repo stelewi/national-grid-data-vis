@@ -1,0 +1,13 @@
+name: national-grid-data-vis
+recipe: lamp
+config:
+  php: '7.4'
+  webroot: ./public
+services:
+  node:
+    type: node:14
+    build:
+      - yarn install
+tooling:
+  yarn:
+    service: node
