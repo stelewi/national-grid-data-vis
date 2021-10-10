@@ -13,7 +13,7 @@ module.exports = {
         rules: [
             {
                 test: /\.css$/i,
-                use: ['style-loader', 'css-loader'],
+                use: ['style-loader', 'css-loader', 'postcss-loader'],
             },
             {
                 test: /\.(png|svg|jpg|jpeg|gif)$/i,
@@ -32,4 +32,5 @@ module.exports = {
             __VUE_PROD_DEVTOOLS__: true,
         })
     ],
+    devtool: 'source-map'
 };

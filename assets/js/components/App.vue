@@ -1,6 +1,12 @@
 <template>
   <div>counter: {{counter}}</div>
   <button @click="increment">Increment</button>
+
+  <div class="rounded-md p-4 bg-rose-500">
+    WTF
+  </div>
+
+
 </template>
 
 <script>
