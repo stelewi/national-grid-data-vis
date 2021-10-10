@@ -1,6 +1,6 @@
 import '../css/styles.css';
 import { createApp } from 'vue';
-import App from './components/App.vue';
+import App from './App.vue';
 
 console.log('running...');
 
