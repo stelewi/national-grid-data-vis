@@ -1,7 +1,13 @@
 import axios from "axios";
 import { ref, reactive } from 'vue';
+import moment from "moment";
 
-const data = ref(null);
+const filters = reactive({
+    from: moment().subtract(1, 'days').format(moment.HTML5_FMT.DATETIME_LOCAL),
+    to: moment().format(moment.HTML5_FMT.DATETIME_LOCAL)
+});
+
+const data = ref([]);
 const types = ref([]);
 const loading = ref(false);
 
@@ -21,25 +27,33 @@ async function loadTypes() {
         });
 }
 
-async function refreshData() {
+async function refreshData(cb) {
 
     loading.value = true;
     axios
-        .get('/data').then((response) => {
+        .get('/data/gen-by-type',
+            { params: {
+                from: moment(filters.from, moment.HTML5_FMT.DATETIME_LOCAL).format(),
+                to: moment(filters.to, moment.HTML5_FMT.DATETIME_LOCAL).format()
+            }}
+            )
+            .then((response) => {
 
-            data.value = response.data;
-        })
-        .catch((error) => {
+                data.value = response.data;
+            })
+            .catch((error) => {
 
-        })
-        .then(() => {
-            loading.value = false;
-        });
+            })
+            .then(() => {
+                loading.value = false;
+                cb();
+            });
 }
 
 loadTypes();
 
 export {
+    filters,
     loadTypes,
     refreshData,
     types,

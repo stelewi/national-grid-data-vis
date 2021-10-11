@@ -32,6 +32,8 @@ class PowerSystemResourceType
      */
     private $description;
 
+
+
     public function getId(): ?int
     {
         return $this->id;

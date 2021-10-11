@@ -56,22 +56,23 @@ class GenerationByTypeRepository extends ServiceEntityRepository
         return $time;
     }
 
-    // /**
-    //  * @return GenerationByType[] Returns an array of GenerationByType objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
+     /**
+      * @return GenerationByType[] Returns an array of GenerationByType objects
+      */
+    public function query(
+        \DateTimeInterface $startTime,
+        \DateTimeInterface $endTime
+    ) {
         return $this->createQueryBuilder('g')
-            ->andWhere('g.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('g.id', 'ASC')
-            ->setMaxResults(10)
+            ->andWhere('g.time >= :startTime')
+            ->andWhere('g.time <= :endTime')
+            ->setParameter('startTime', $startTime)
+            ->setParameter('endTime', $endTime)
+            ->orderBy('g.time', 'ASC')
             ->getQuery()
             ->getResult()
         ;
     }
-    */
 
     /*
     public function findOneBySomeField($value): ?GenerationByType

@@ -28,7 +28,9 @@
   },
   "dependencies": {
     "axios": "^0.22.0",
+    "moment": "^2.29.1",
     "three": "^0.133.1",
+    "troika-three-text": "^0.43.0",
     "underscore": "^1.13.1",
     "vue": "^3.2.20"
   }

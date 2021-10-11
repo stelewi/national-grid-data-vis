@@ -1,9 +1,9 @@
 <template>
-  <div class="h-full bg-blue-50 flex">
-    <div class="flex-grow h-full bg-red-50">
+  <div class="h-full bg-blue-50">
+    <div class="flex-grow h-full">
       <data-view></data-view>
     </div>
-    <div class="flex-none w-64 h-full bg-green-50">
+    <div class="flex-none w-64 h-full absolute top-0 right-0 bg-gray-200 bg-opacity-25">
       <filters></filters>
     </div>
   </div>
