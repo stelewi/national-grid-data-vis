@@ -28,6 +28,8 @@
   },
   "dependencies": {
     "axios": "^0.22.0",
+    "three": "^0.133.1",
+    "underscore": "^1.13.1",
     "vue": "^3.2.20"
   }
 }
