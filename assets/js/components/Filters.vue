@@ -6,7 +6,7 @@
 
     <ul>
       <li v-for="type in types">
-        <input type="checkbox" :checked="typeIsVisible(type.id)" class="mr-3">{{ type.label }}
+        <input type="checkbox" v-model="type.show" @change="refreshViewer()" class="mr-3">{{ type.label }}
       </li>
     </ul>
 
@@ -25,21 +25,19 @@ export default {
 
     const update = () => {
       refreshData(() => {
-        viewer.refreshFromData();
+        viewer.refresh();
       });
     };
 
-    const typeIsVisible = (typeId) => {
-
-      return true;
-    }
+    const refreshViewer = () => {
+      viewer.refresh();
+    };
 
     return {
-
       filters,
       update,
       types,
-      typeIsVisible
+      refreshViewer
     }
   }
 }

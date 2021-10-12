@@ -24,15 +24,19 @@ class Viewer {
         // graph data
         this.fromUnixTime = null;
         this.toUnixTime = null;
-        this.types = [];
+        this.timeResolution = 30 * 60;
+        this.types = {}; // typeId => type
         this.data = [];
+        this.xLabels = [];
+        this.bars = [];
     }
 
-    refreshFromData() {
+    refresh() {
 
-        console.log('refreshFromData()');
+        console.log('refresh()');
         this._refreshGraphData();
-        this._buildXLabels();
+        this._refreshXLabels();
+        this._refreshBars();
     }
 
     attachToContainer(containerEl) {
@@ -58,18 +62,31 @@ class Viewer {
         window.addEventListener('resize', debouncedResize);
     }
 
-    /**
-     *  refresh the base data that we build our graph from
-     * @private
-     */
-    _refreshGraphData() {
-        this.fromUnixTime =  moment(filters.from, moment.HTML5_FMT.DATETIME_LOCAL).unix();
-        this.toUnixTime =  moment(filters.to, moment.HTML5_FMT.DATETIME_LOCAL).unix();
-        this.types = types.value.map((type) => ({
-            id: type.id,
-            name: type.name,
-            label: type.label
-        }));
+    _refreshTypes() {
+        this.types = {};
+        let position = 0, type = null;
+
+        for(let i = 0; i < types.value.length; i++)
+        {
+            type = types.value[i];
+
+            this.types[type.id] = {
+                id: type.id,
+                name: type.name,
+                label: type.label,
+                show: type.show,
+                position: type.show ? position : null,
+                xPos: type.show ? this._xPos(position) : null
+            }
+
+            if(type.show)
+            {
+                position++;
+            }
+        }
+    }
+
+    _refreshData() {
         this.data = data.value.map((record) => ({
             unixTime: moment(record.time).unix(),
             typeId: record.resourceType.id,
@@ -78,41 +95,58 @@ class Viewer {
     }
 
     /**
-     *  build the graph
+     *  refresh the base data that we build our graph from
      * @private
      */
-    _buildGraph() {
-
-
-
+    _refreshGraphData() {
+        this.fromUnixTime =  moment(filters.from, moment.HTML5_FMT.DATETIME_LOCAL).unix();
+        this.toUnixTime =  moment(filters.to, moment.HTML5_FMT.DATETIME_LOCAL).unix();
+        this._refreshTypes();
+        this._refreshData();
     }
 
-    _buildXLabels() {
+    _refreshXLabels() {
 
-        let type = null;
+        let type = null, xLabel = null;
 
-        for(let i = 0; i < this.types.length; i++)
+        for(let typeId in this.types)
         {
-            type = this.types[i];
+            type = this.types[typeId];
 
-            let xLabelText = new Text();
-            xLabelText.text = type.label;
-            xLabelText.maxWidth = this.barWidth * 4;
-            xLabelText.fontSize = this.barWidth / 2.5;
-            xLabelText.textAlign = 'right';
-            xLabelText.anchorX = 'right';
-            xLabelText.position.z = this.barMargin;
-            xLabelText.position.x = ((this.barMargin + this.barWidth) * (i + 1)) - (this.barWidth / 2.0);
-            xLabelText.position.y = 0;
-            xLabelText.rotation.x = -Math.PI /2;
-            xLabelText.rotation.z = Math.PI /2;
-            xLabelText.color = 0x038525;
-            xLabelText.sync();
+            // no xLabel exists for this type so create one..
+            if(this.xLabels[type.id] === undefined)
+            {
+                xLabel = new Text();
 
-            type.sceneTextObj = xLabelText;
+                xLabel.text = type.label;
+                xLabel.maxWidth = this.barWidth * 4;
+                xLabel.fontSize = this.barWidth / 2.5;
+                xLabel.textAlign = 'right';
+                xLabel.anchorX = 'right';
+                xLabel.position.z = this.barMargin;
+                xLabel.position.y = 0;
+                xLabel.rotation.x = -Math.PI /2;
+                xLabel.rotation.z = Math.PI /2;
+                xLabel.color = 0x038525;
 
-            this.scene.add(xLabelText);
+                this.scene.add(xLabel);
+
+                this.xLabels[type.id] = xLabel;
+            }
+
+            xLabel = this.xLabels[type.id];
+            xLabel.position.x = type.xPos;
+            xLabel.visible = type.show;
+            xLabel.sync();
         }
+    }
+
+    _xPos(position) {
+        return -(((this.barMargin + this.barWidth) * (position + 1)) - (this.barWidth / 2.0));
+    }
+
+    _refreshBars() {
+
     }
 
     _initControls() {

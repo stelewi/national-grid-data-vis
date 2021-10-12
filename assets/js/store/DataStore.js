@@ -13,11 +13,17 @@ const loading = ref(false);
 
 async function loadTypes() {
 
+    console.log('loading types...');
+
     loading.value = true;
     axios
         .get('/data/types').then((response) => {
 
-        types.value = response.data;
+        // init 'show' flags to true
+        types.value = response.data.map((type) => {
+            type.show = true;
+            return type;
+        });
     })
         .catch((error) => {
 
