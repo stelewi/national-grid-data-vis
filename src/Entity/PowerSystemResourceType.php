@@ -32,6 +32,10 @@ class PowerSystemResourceType
      */
     private $description;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $color;
 
 
     public function getId(): ?int
@@ -73,5 +77,15 @@ class PowerSystemResourceType
         $this->description = $description;
 
         return $this;
+    }
+
+    public function getColor()
+    {
+        return $this->color;
+    }
+
+    public function setColor($color): void
+    {
+        $this->color = $color;
     }
 }

@@ -6,11 +6,15 @@
 
     <ul>
       <li v-for="type in types">
-        <input type="checkbox" v-model="type.show" @change="refreshViewer()" class="mr-3">{{ type.label }}
+        <label class="filter-label">
+          <input type="checkbox" v-model="type.show" @change="refreshViewer()" class="mr-2">
+          {{ type.label }}
+        </label>
+
       </li>
     </ul>
 
-    <button class="btn btn-blue" @click.prevent="update()">Refresh</button>
+    <button class="btn btn-blue my-2" @click.prevent="update()">Refresh</button>
 
   </div>
 
@@ -42,3 +46,11 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+
+label.filter-label:hover {
+  cursor: pointer;
+}
+
+</style>
